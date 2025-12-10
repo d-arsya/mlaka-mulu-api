@@ -11,7 +11,7 @@ const AppDataSource = new DataSource({
   database: process.env.DB_NAME || 'mlakumulu_db',
 
   entities: ['./src/**/*.entity{.ts,.js}'],
-  migrations: ['./src/migrations/*.ts'],
+  migrations: ['./src/migrations/*{.ts,.js}'],
 
   logging: true,
   synchronize: false,
