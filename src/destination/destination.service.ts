@@ -19,28 +19,26 @@ export class DestinationService {
   }
 
   async findAll(): Promise<Destination[]> {
-    return this.destinationRepository.find();
+    return this.destinationRepository.find({
+      relations: ['trips', 'trips.destinations'],
+    });
   }
 
   async findOne(id: string): Promise<Destination> {
-    const destination = await this.destinationRepository.findOneBy({ id });
-
-    if (!destination) {
-      throw new NotFoundException(`Destination with ID ${id} not found`);
-    }
-
-    return destination;
+    return this.destinationRepository.findOneOrFail({
+      where: { id },
+      relations: ['trips'],
+    });
   }
 
   async update(
     id: string,
     updateDestinationDto: UpdateDestinationDto,
   ): Promise<Destination> {
-    const destination = await this.destinationRepository.findOneBy({ id });
-    if (!destination) {
-      throw new NotFoundException(`Destination with ID ${id} not found`);
-    }
-
+    const destination = await this.destinationRepository.findOneOrFail({
+      where: { id },
+      relations: ['trips'],
+    });
     const updated = this.destinationRepository.merge(
       destination,
       updateDestinationDto,
@@ -52,10 +50,9 @@ export class DestinationService {
   }
 
   async remove(id: string) {
-    const destination = await this.destinationRepository.findOneBy({ id });
-    if (!destination) {
-      throw new NotFoundException(`Destination with ID ${id} not found`);
-    }
+    const destination = await this.destinationRepository.findOneOrFail({
+      where: { id },
+    });
     return this.destinationRepository.remove(destination);
   }
 }

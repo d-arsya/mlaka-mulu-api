@@ -1,4 +1,5 @@
 import { Destination } from '@/destination/destination.entity';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   Entity,
@@ -11,27 +12,37 @@ import {
 @Entity()
 export class Trip {
   @PrimaryGeneratedColumn('uuid')
+  @ApiProperty()
   id: string;
 
   @Column()
+  @ApiProperty()
   name: string;
 
   @Column('timestamptz')
+  @ApiProperty()
   startDate: Date;
 
   @Column('timestamptz')
+  @ApiProperty()
   endDate: Date;
 
   @Column('integer')
+  @ApiProperty()
   price: number;
 
-  @Column('integer')
+  @Column('integer', { default: 0 })
+  @ApiProperty()
   quota: number;
 
-  @Column('integer')
+  @Column('integer', { default: 0 })
+  @ApiProperty()
   booked: number;
 
-  @ManyToMany(() => Destination)
+  @ManyToMany(() => Destination, (destination) => destination.trips, {
+    cascade: true,
+  })
   @JoinTable()
+  @ApiProperty({ type: () => [Destination] })
   destinations: Destination[];
 }

@@ -1,25 +1,77 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTripDto, UpdateTripDto } from './trip.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Trip } from './trip.entity';
+import { In, Repository } from 'typeorm';
+import { Destination } from '@/destination/destination.entity';
 
 @Injectable()
 export class TripService {
-  create(createTripDto: CreateTripDto) {
-    return 'This action adds a new trip';
+  constructor(
+    @InjectRepository(Trip)
+    private tripRepository: Repository<Trip>,
+    @InjectRepository(Destination)
+    private destinationRepository: Repository<Destination>,
+  ) {}
+  async create(createTripDto: CreateTripDto): Promise<Trip> {
+    const destinationIds = Array.from(new Set(createTripDto.destinations));
+    const destinationEntities = await this.destinationRepository.findBy({
+      id: In(destinationIds),
+    });
+
+    if (destinationEntities.length !== destinationIds.length) {
+      throw new NotFoundException('Some destination IDs do not exist');
+    }
+    const { destinations, ...tripData } = createTripDto;
+    tripData.booked = 0;
+    const trip = this.tripRepository.create({
+      ...tripData,
+      destinations: destinationEntities,
+    });
+    return await this.tripRepository.save(trip);
   }
 
-  findAll() {
-    return `This action returns all trip`;
+  async findAll(): Promise<Trip[]> {
+    return this.tripRepository.find({
+      relations: ['destinations', 'destinations.trips'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} trip`;
+  async findOne(id: string): Promise<Trip> {
+    return this.tripRepository.findOneOrFail({
+      where: { id },
+      relations: ['destinations', 'destinations.trips'],
+    });
   }
 
-  update(id: number, updateTripDto: UpdateTripDto) {
-    return `This action updates a #${id} trip`;
+  async update(id: string, updateTripDto: UpdateTripDto) {
+    const trip = await this.tripRepository.findOneOrFail({
+      where: { id },
+      relations: ['destinations', 'destinations.trips'],
+    });
+
+    if (updateTripDto.destinations) {
+      const destinationIds = Array.from(new Set(updateTripDto.destinations));
+
+      const destinationEntities = await this.destinationRepository.findBy({
+        id: In(destinationIds),
+      });
+
+      if (destinationEntities.length !== destinationIds.length) {
+        throw new NotFoundException('Some destination IDs do not exist');
+      }
+
+      trip.destinations = destinationEntities;
+    }
+
+    const { destinations, ...rest } = updateTripDto;
+    Object.assign(trip, rest);
+
+    return this.tripRepository.save(trip);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} trip`;
+  async remove(id: string) {
+    const trip = await this.tripRepository.findOneByOrFail({ id });
+    return this.tripRepository.remove(trip);
   }
 }
