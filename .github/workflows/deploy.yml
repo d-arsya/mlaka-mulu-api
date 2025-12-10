@@ -47,4 +47,5 @@ jobs:
             cd /media/mlaka-mulu-api
             docker pull disyfa/mlaka-mulu-api:latest
             docker compose up -d
-            docker exec -t mlaka-mulu-api npm run migration:dev
+            docker exec -t mlaka-mulu-api node dist/ormconfig.js migration:refresh
+            docker exec -t mlaka-mulu-api node dist/ormconfig.js migration:run
