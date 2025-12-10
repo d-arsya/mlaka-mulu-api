@@ -1,4 +1,4 @@
-import { Destination } from '@/destination/entities/destination.entity';
+import { Destination } from '@/destination/destination.entity';
 import {
   Column,
   Entity,
@@ -33,5 +33,5 @@ export class Trip {
 
   @ManyToMany(() => Destination)
   @JoinTable()
-  destionations: Destination[];
+  destinations: Destination[];
 }

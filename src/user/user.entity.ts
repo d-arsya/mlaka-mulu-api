@@ -1,5 +1,5 @@
-import { Booking } from '@/booking/entities/booking.entity';
-import { TouristTrip } from '@/tourist-trip/entities/tourist-trip.entity';
+import { Booking } from '@/booking/booking.entity';
+import { TouristTrip } from '@/tourist-trip/tourist-trip.entity';
 import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Entity } from 'typeorm';

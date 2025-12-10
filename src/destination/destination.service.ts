@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDestinationDto } from './dto/destination.dto';
-import { UpdateDestinationDto } from './dto/destination.dto';
+import { CreateDestinationDto } from './destination.dto';
+import { UpdateDestinationDto } from './destination.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Destination } from './entities/destination.entity';
+import { Destination } from './destination.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -35,7 +35,7 @@ export class DestinationService {
   async update(
     id: string,
     updateDestinationDto: UpdateDestinationDto,
-  ): Promise<{ message: string; destination: Destination }> {
+  ): Promise<Destination> {
     const destination = await this.destinationRepository.findOneBy({ id });
     if (!destination) {
       throw new NotFoundException(`Destination with ID ${id} not found`);
@@ -48,21 +48,14 @@ export class DestinationService {
 
     await this.destinationRepository.save(updated);
 
-    return {
-      message: `Destination with ID ${id} has been updated successfully.`,
-      destination: updated,
-    };
+    return updated;
   }
 
-  async remove(id: string): Promise<{ message: string }> {
-    const result = await this.destinationRepository.delete(id);
-
-    if (result.affected === 0) {
+  async remove(id: string) {
+    const destination = await this.destinationRepository.findOneBy({ id });
+    if (!destination) {
       throw new NotFoundException(`Destination with ID ${id} not found`);
     }
-
-    return {
-      message: `Destination with ID ${id} has been deleted successfully.`,
-    };
+    return this.destinationRepository.remove(destination);
   }
 }

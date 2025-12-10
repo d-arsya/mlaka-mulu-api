@@ -19,7 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "migration:dev": "npm run migration:refresh && npm run migration:generate && npm run migration:run && rm -rf ./src/migrations",
+    "migration:dev": "rm -rf ./src/migrations && npm run migration:refresh && npm run migration:generate && npm run migration:run",
     "migration:generate": "npm run typeorm -- migration:generate -d ./ormconfig.ts ./src/migrations/migrations",
     "migration:run": "npm run typeorm -- migration:run -d ./ormconfig.ts",
     "migration:revert": "npm run typeorm -- migration:revert -d ./ormconfig.ts",

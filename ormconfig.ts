@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm'; // Impor TypeORM DataSource
+import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -10,7 +10,7 @@ const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME || 'mlakumulu_db',
 
-  entities: ['./src/**/entities/*.entity{.ts,.js}'],
+  entities: ['./src/**/*.entity{.ts,.js}'],
   migrations: ['src/migrations/*.ts'],
 
   logging: true,

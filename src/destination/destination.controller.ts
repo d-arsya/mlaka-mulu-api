@@ -9,8 +9,7 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { DestinationService } from './destination.service';
-import { CreateDestinationDto } from './dto/destination.dto';
-import { UpdateDestinationDto } from './dto/destination.dto';
+import { CreateDestinationDto, UpdateDestinationDto } from './destination.dto';
 
 @Controller('destination')
 export class DestinationController {

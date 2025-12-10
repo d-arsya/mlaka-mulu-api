@@ -17,19 +17,18 @@ import path from 'path';
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
         const entitiesPath = path.join(__dirname, '**/*.entity{.ts,.js}');
         return {
-          type: 'postgres', // Pastikan tipenya 'postgres'
+          type: 'postgres',
           host: configService.get<string>('DB_HOST'),
           port: configService.get<number>('DB_PORT'),
           username: configService.get<string>('DB_USER'),
           password: configService.get<string>('DB_PASSWORD'),
           database: configService.get<string>('DB_NAME'),
-
           entities: [entitiesPath],
           synchronize: configService.get<string>('NODE_ENV') !== 'production',
-          logging: true,
+          logging: false,
         };
       },
-      inject: [ConfigService], // Inject ConfigService
+      inject: [ConfigService],
     }),
     UserModule,
     DestinationModule,

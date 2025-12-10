@@ -1,7 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TouristTripService } from './tourist-trip.service';
-import { CreateTouristTripDto } from './dto/create-tourist-trip.dto';
-import { UpdateTouristTripDto } from './dto/update-tourist-trip.dto';
+import { CreateTouristTripDto, UpdateTouristTripDto } from './tourist-trip.dto';
 
 @Controller('tourist-trip')
 export class TouristTripController {
@@ -23,7 +30,10 @@ export class TouristTripController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTouristTripDto: UpdateTouristTripDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateTouristTripDto: UpdateTouristTripDto,
+  ) {
     return this.touristTripService.update(+id, updateTouristTripDto);
   }
 
