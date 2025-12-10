@@ -1,3 +1,4 @@
+import { AbstractEntity } from '@/database/abstract.entity';
 import { Trip } from '@/trip/trip.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -9,11 +10,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Destination {
-  @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
-  id: string;
-
+export class Destination extends AbstractEntity {
   @Column()
   @ApiProperty()
   name: string;

@@ -1,3 +1,4 @@
+import { AbstractEntity } from '@/database/abstract.entity';
 import { User } from '@/user/user.entity';
 import {
   Column,
@@ -8,10 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Booking {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class Booking extends AbstractEntity {
   @Column()
   amount: number;
 

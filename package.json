@@ -18,12 +18,12 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "migration:dev": "rm -rf ./src/migrations && npm run migration:refresh && npm run migration:generate && npm run migration:run",
-    "migration:generate": "npm run typeorm -- migration:generate -d ./ormconfig.ts ./src/migrations/migrations",
-    "migration:run": "npm run typeorm -- migration:run -d ./ormconfig.ts",
-    "migration:revert": "npm run typeorm -- migration:revert -d ./ormconfig.ts",
-    "migration:refresh": "npm run typeorm -- schema:drop -d ./ormconfig.ts"
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "db:migrate": "npm run build && npm run typeorm -- migration:generate src/database/migrations/migration -d src/database/database.config.ts",
+    "db:up": "npm run typeorm -- migration:run -d src/database/database.config.ts",
+    "db:down": "npm run typeorm -- migration:revert -d src/database/database.config.ts",
+    "db:refresh": "npm run typeorm -- schema:drop -d src/database/database.config.ts",
+    "db:seed": "ts-node -r tsconfig-paths/register seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -42,12 +42,15 @@
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "slugify": "^1.6.6",
     "typeorm": "^0.3.28",
+    "typeorm-extension": "^3.7.2",
     "zod": "^4.1.13"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
+    "@faker-js/faker": "^10.1.0",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
@@ -55,6 +58,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
+    "cross-env": "^10.1.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",

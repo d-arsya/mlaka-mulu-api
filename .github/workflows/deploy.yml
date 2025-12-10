@@ -47,5 +47,3 @@ jobs:
             cd /media/mlaka-mulu-api
             docker pull disyfa/mlaka-mulu-api:latest
             docker compose up -d
-            docker exec -t mlaka-mulu-api npx typeorm schema:drop -d dist/ormconfig.js
-            docker exec -it mlaka-mulu-api sh -c "cd /app/dist && npx typeorm migration:run -d ormconfig.js"

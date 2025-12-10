@@ -1,4 +1,5 @@
 import { Booking } from '@/booking/booking.entity';
+import { AbstractEntity } from '@/database/abstract.entity';
 import { TouristTrip } from '@/tourist-trip/tourist-trip.entity';
 import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -10,10 +11,7 @@ export enum UserRole {
   TOURIST = 'tourist',
 }
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class User extends AbstractEntity {
   @Column()
   name: string;
 
