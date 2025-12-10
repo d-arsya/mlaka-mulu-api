@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { DestinationService } from './destination.service';
-import { CreateDestinationDto } from './dto/create-destination.dto';
-import { UpdateDestinationDto } from './dto/update-destination.dto';
+import { CreateDestinationDto } from './dto/destination.dto';
+import { UpdateDestinationDto } from './dto/destination.dto';
 
 @Controller('destination')
 export class DestinationController {
@@ -18,17 +27,20 @@ export class DestinationController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.destinationService.findOne(+id);
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.destinationService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDestinationDto: UpdateDestinationDto) {
-    return this.destinationService.update(+id, updateDestinationDto);
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateDestinationDto: UpdateDestinationDto,
+  ) {
+    return this.destinationService.update(id, updateDestinationDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.destinationService.remove(+id);
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.destinationService.remove(id);
   }
 }

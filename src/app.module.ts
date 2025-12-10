@@ -7,7 +7,6 @@ import { TouristTripModule } from './tourist-trip/tourist-trip.module';
 import { BookingModule } from './booking/booking.module';
 import { TripModule } from './trip/trip.module';
 import { DestinationModule } from './destination/destination.module';
-import { UserModule } from './user/user.module';
 import path from 'path';
 
 @Module({
