@@ -5,7 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { ZodValidationException } from 'nestjs-zod';
-import { EntityNotFoundError } from 'typeorm';
+import { EntityNotFoundError, TypeORMError } from 'typeorm';
 import { ZodError } from 'zod';
 
 @Catch()
@@ -13,7 +13,6 @@ export class ErrorFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
-    console.error('🔥 ORIGINAL ERROR:', exception);
 
     if (exception instanceof EntityNotFoundError) {
       const info = (exception as any).criteria.where;
@@ -48,6 +47,16 @@ export class ErrorFilter implements ExceptionFilter {
         message: 'Validation failed',
       });
     }
+    if (exception instanceof TypeORMError) {
+      const field = this.extractFieldName(exception.stack!);
+      return response.status(400).json({
+        success: false,
+        code: 400,
+        data: null,
+        error: [field],
+        message: exception.message,
+      });
+    }
 
     const status =
       exception instanceof HttpException ? exception.getStatus() : 500;
@@ -65,5 +74,16 @@ export class ErrorFilter implements ExceptionFilter {
       message:
         typeof message === 'string' ? message : message?.['message'] || 'Error',
     });
+  }
+  private extractFieldName(errorMessage: string): string | null {
+    if (!errorMessage) return null;
+
+    const match = errorMessage.match(/Key \((\w+)\)=/);
+
+    if (match && match[1]) {
+      return match[1];
+    }
+
+    return null;
   }
 }

@@ -1,32 +1,61 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { Repository, TypeORMError } from 'typeorm';
+import { User, UserRole } from './user.entity';
+import bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private userRepository: Repository<User>,
   ) {}
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    try {
+      createUserDto.password = await bcrypt.hash(createUserDto.password, 10);
+      const user = await this.userRepository.save(createUserDto);
+      return await this.findOne(user.email);
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new TypeORMError(error.detail);
+      }
+      throw error;
+    }
   }
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  findByRole(role: UserRole): Promise<User[]> {
+    return this.userRepository.find({
+      where: { role },
+      relations: ['bookings', 'trips'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string): Promise<User> {
+    return await this.userRepository.findOneOrFail({
+      where: { id },
+      relations: ['bookings', 'trips'],
+    });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findByEmail(email: string): Promise<User> {
+    return this.userRepository.findOneOrFail({
+      where: { email },
+      relations: ['bookings', 'trips'],
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.findOneOrFail({
+      where: { id },
+      relations: ['bookings', 'trips'],
+    });
+    this.userRepository.merge(user, updateUserDto);
+    return this.userRepository.save(user);
+  }
+
+  async remove(id: string) {
+    const user = await this.userRepository.findOneByOrFail({ id });
+    return this.userRepository.remove(user);
   }
 }

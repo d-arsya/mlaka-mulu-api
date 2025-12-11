@@ -7,19 +7,30 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { TripService } from './trip.service';
 import { CreateTripDto, UpdateTripDto } from './trip.dto';
 import { ApiResponseDto } from '@/common/response.dto';
 import { Trip } from './trip.entity';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiExtraModels,
   ApiOkResponse,
   getSchemaPath,
 } from '@nestjs/swagger';
 import { Destination } from '@/destination/destination.entity';
+import { JwtAuthGuard } from '@/auth/jwt.guard';
+import { Action, AppAbility } from '@/casl/casl-ability.factory';
+import { CheckPolicies } from '@/auth/policy.decorator';
+import { PoliciesGuard } from '@/auth/policy.guard';
+import { Public } from '@/auth/public.decorator';
 
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('trip')
 export class TripController {
   constructor(private readonly tripService: TripService) {}
@@ -38,6 +49,8 @@ export class TripController {
       ],
     },
   })
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, Trip))
   create(@Body() createTripDto: CreateTripDto) {
     return this.tripService.create(createTripDto);
   }
@@ -59,6 +72,7 @@ export class TripController {
       ],
     },
   })
+  @Public()
   findAll() {
     return this.tripService.findAll();
   }
@@ -77,6 +91,7 @@ export class TripController {
       ],
     },
   })
+  @Public()
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.tripService.findOne(id);
   }
@@ -95,6 +110,10 @@ export class TripController {
       ],
     },
   })
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(Action.Update, Destination),
+  )
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTripDto: UpdateTripDto,
@@ -103,6 +122,11 @@ export class TripController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(Action.Delete, Destination),
+  )
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.tripService.remove(id);
   }

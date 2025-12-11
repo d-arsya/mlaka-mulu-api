@@ -8,6 +8,8 @@ import { TripModule } from './trip/trip.module';
 import { DestinationModule } from './destination/destination.module';
 import { DatabaseModule } from './database/database.module';
 import { SeederModule } from './database/seeders/seeder.module';
+import { CaslModule } from './casl/casl.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { SeederModule } from './database/seeders/seeder.module';
     BookingModule,
     TouristTripModule,
     DatabaseModule,
+    CaslModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
