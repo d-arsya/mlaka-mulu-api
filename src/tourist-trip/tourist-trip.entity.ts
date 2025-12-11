@@ -1,15 +1,22 @@
 import { AbstractEntity } from '@/database/abstract.entity';
 import { Trip } from '@/trip/trip.entity';
 import { User } from '@/user/user.entity';
-import { JoinColumn, OneToOne, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  JoinColumn,
+  OneToOne,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+} from 'typeorm';
 
 @Entity()
 export class TouristTrip extends AbstractEntity {
-  @OneToOne(() => User)
-  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.trips)
+  @ApiProperty({ type: () => User })
   user: User;
 
-  @OneToOne(() => Trip)
-  @JoinColumn()
+  @ManyToOne(() => Trip, (trip) => trip.trips)
+  @ApiProperty({ type: () => Trip })
   trip: Trip;
 }

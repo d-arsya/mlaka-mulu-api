@@ -7,10 +7,12 @@ import { DestinationFactory } from '../factories/destination.factory';
 export class DestinationSeeder {
   constructor(private readonly dataSource: DataSource) {}
 
-  async run() {
+  async run(DESTINATION: number) {
     const destinationRepository = this.dataSource.getRepository(Destination);
-    const destinations = Array.from({ length: 50 }, () => DestinationFactory());
+    const destinations = Array.from({ length: DESTINATION }, () =>
+      DestinationFactory(),
+    );
     await destinationRepository.save(destinations);
-    console.log('✅ Destination Seeder: 50 destinations created.');
+    console.log(`✅ Destination Seeder: ${DESTINATION} destinations created.`);
   }
 }

@@ -9,7 +9,7 @@ import { faker } from '@faker-js/faker';
 export class TripSeeder {
   constructor(private readonly dataSource: DataSource) {}
 
-  async run() {
+  async run(TRIP: number) {
     const tripRepository = this.dataSource.getRepository(Trip);
     const destinationRepository = this.dataSource.getRepository(Destination);
     const existingDestinations = await destinationRepository.find();
@@ -18,10 +18,8 @@ export class TripSeeder {
       console.warn('⚠️ Trip Seeder: No destination found.');
       return;
     }
-
-    const numberOfTripsToSeed = 30;
     const tripsToSave: Trip[] = [];
-    for (let i = 0; i < numberOfTripsToSeed; i++) {
+    for (let i = 0; i < TRIP; i++) {
       const trip = TripFactory();
       const selectedDestinations = this.getRandomSubset(
         existingDestinations,
@@ -32,9 +30,7 @@ export class TripSeeder {
       tripsToSave.push(trip);
     }
     await tripRepository.save(tripsToSave);
-    console.log(
-      `✅ Trip Seeder: ${numberOfTripsToSeed} Trips (with Destinations) created.`,
-    );
+    console.log(`✅ Trip Seeder: ${TRIP} Trips (with Destinations) created.`);
   }
   private getRandomSubset<T>(array: T[], size: number): T[] {
     const shuffled = array.sort(() => 0.5 - Math.random());

@@ -1,5 +1,7 @@
+import { Booking } from '@/booking/booking.entity';
 import { AbstractEntity } from '@/database/abstract.entity';
 import { Destination } from '@/destination/destination.entity';
+import { TouristTrip } from '@/tourist-trip/tourist-trip.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
@@ -42,4 +44,12 @@ export class Trip extends AbstractEntity {
   @JoinTable()
   @ApiProperty({ type: () => [Destination] })
   destinations: Destination[];
+
+  @OneToMany(() => Booking, (booking) => booking.trip)
+  @ApiProperty({ type: () => [Booking] })
+  bookings: Booking[];
+
+  @OneToMany(() => TouristTrip, (trips) => trips.trip)
+  @ApiProperty({ type: () => [TouristTrip] })
+  trips: TouristTrip[];
 }

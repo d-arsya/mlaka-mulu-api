@@ -11,11 +11,8 @@ export const TripFactory = (): Trip => {
   trip.startDate = startDate;
   trip.endDate = endDate;
   trip.price = faker.number.int({ min: 500000, max: 20000000 });
-  const quota = faker.number.int({ min: 10, max: 50 });
-  const booked = faker.number.int({ min: 0, max: quota - 1 });
-
-  trip.quota = quota;
-  trip.booked = booked;
+  trip.quota = faker.number.int({ min: 10, max: 50 });
+  trip.booked = 0;
   trip.destinations = [];
 
   return trip;
