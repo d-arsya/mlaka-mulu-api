@@ -14,6 +14,7 @@ export const BookingFactory = (
   booking.amount = faker.number.int({ min: 1, max: trip.quota });
   booking.user = user;
   booking.trip = trip;
+  booking.bill = trip.price * booking.amount;
 
   trip.quota -= booking.amount;
   trip.booked += booking.amount;

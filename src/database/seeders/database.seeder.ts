@@ -21,12 +21,11 @@ export class MainSeeder {
 
     console.log('Synchronizing database schema...');
     await this.dataSource.synchronize();
-
     console.log('--- Starting Database Seeding ---');
-    await this.destinationSeeder.run(500);
+    await this.destinationSeeder.run(50);
     await this.tripSeeder.run(100);
-    await this.userSeeder.run(100);
-    await this.bookingSeeder.run(50);
+    await this.userSeeder.run(10);
+    await this.bookingSeeder.run(100);
     console.log('--- Database Seeding Completed Successfully ---');
   }
 }

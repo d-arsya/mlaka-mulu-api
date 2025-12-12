@@ -1,4 +1,6 @@
+import { Booking } from '@/booking/booking.entity';
 import { Destination } from '@/destination/destination.entity';
+import { TouristTrip } from '@/tourist-trip/tourist-trip.entity';
 import { Trip } from '@/trip/trip.entity';
 import { User, UserRole } from '@/user/user.entity';
 import {
@@ -11,7 +13,13 @@ import {
 import { Injectable } from '@nestjs/common';
 
 type Subjects =
-  | InferSubjects<typeof Trip | typeof Destination | typeof User>
+  | InferSubjects<
+      | typeof Trip
+      | typeof Destination
+      | typeof User
+      | typeof Booking
+      | typeof TouristTrip
+    >
   | 'all';
 
 export enum Action {
@@ -39,7 +47,13 @@ export class CaslAbilityFactory {
     } else if (user.role === UserRole.EMPLOYEE) {
       can(Action.Manage, [Trip, Destination]);
       can(Action.Manage, User, { role: UserRole.TOURIST });
+      can(Action.Manage, Booking);
     } else if (user.role === UserRole.TOURIST) {
+      can(Action.Read, TouristTrip);
+      can(Action.Read, TouristTrip, { user: { id: user.id } });
+      can(Action.Read, Booking, { user: { id: user.id } });
+      can(Action.Update, Booking, { user: { id: user.id } });
+      can(Action.Create, Booking);
       cannot(Action.Read, User);
     }
 

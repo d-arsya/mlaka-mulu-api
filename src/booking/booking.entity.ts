@@ -16,6 +16,10 @@ export class Booking extends AbstractEntity {
   @ApiProperty()
   amount: number;
 
+  @Column()
+  @ApiProperty()
+  bill: number;
+
   @Column({ type: 'enum', enum: BookingStatus, default: BookingStatus.UNPAID })
   @ApiProperty()
   status: BookingStatus;
