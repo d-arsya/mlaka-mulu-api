@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Booking } from './booking.entity';
 import { CaslModule } from '@/casl/casl.module';
 import { Trip } from '@/trip/trip.entity';
+import { TouristTrip } from '@/tourist-trip/tourist-trip.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Booking, Trip]), CaslModule],
+  imports: [TypeOrmModule.forFeature([Booking, Trip, TouristTrip]), CaslModule],
   controllers: [BookingController],
   providers: [BookingService],
 })
