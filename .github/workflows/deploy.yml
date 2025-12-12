@@ -47,4 +47,3 @@ jobs:
             cd /media/mlaka-mulu-api
             docker pull disyfa/mlaka-mulu-api:latest
             docker compose up -d
-            docker exec -t mlaka-mulu-api node /app/dist/seed.js
