@@ -16,7 +16,7 @@ async function bootstrap() {
     .setDescription('Backend REST API untuk Biro Perjalanan Mlaku-Mulu.')
     .setVersion('1.0')
     .addBearerAuth()
-    .addServer('/api')
+    .addServer('https://mlakamulu-api.disyfa.space/api')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
