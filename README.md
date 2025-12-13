@@ -18,7 +18,17 @@ Proyek dibangun dengan **NestJS**, **TypeScript**, dan **PostgreSQL**, serta men
 - **Postman Collection** – Dokumentasi pengujian endpoint
 
 ---
+## 👤 Dummy User (Seeder)
 
+Untuk memudahkan pengujian API, aplikasi ini menyediakan **data dummy user** yang otomatis dibuat melalui database seeder.
+
+| Role     | Email                                             | Password |
+| -------- | ------------------------------------------------- | -------- |
+| owner    | [owner@gmail.com](mailto:owner@gmail.com)         | password |
+| employee | [employee1@gmail.com](mailto:employee1@gmail.com) | password |
+| tourist  | [tourist1@gmail.com](mailto:tourist1@gmail.com)   | password |
+
+---
 ## 🌐 URL Penting
 
 | Kebutuhan               | URL                                                                                                                                                                                                                                  |
